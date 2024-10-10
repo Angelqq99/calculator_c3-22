@@ -4,11 +4,7 @@ const operators = ['+', '-', '*', '/', '%', '|-|'];
 var decimalAdded = false;
 var memoryStorage = 0;
 var isOperatorClicked = false;
-<<<<<<< HEAD
 var currentInput = ''; 
-=======
-var currentInput = ''; // хранение введенных данных
->>>>>>> 4fad0cb3ae8b698ec7583ca178d3de077d347ed7
 var firstInput = '';
 var lastInput = '';
 var tempInput = '';
@@ -21,29 +17,17 @@ function calculate(){
         }
         currentInput = currentInput.replace(/,/g, '.');
         var result = eval(currentInput);
-<<<<<<< HEAD
-=======
-        // Проверка на превышение предела 10^16 - 1
->>>>>>> 4fad0cb3ae8b698ec7583ca178d3de077d347ed7
         if(result > (10**16 - 1)) {
             tempInput = '';
             reset();
             input.value = '............';
-<<<<<<< HEAD
             return;  
-=======
-            return;  // Выходим из функции
->>>>>>> 4fad0cb3ae8b698ec7583ca178d3de077d347ed7
         }
 
         // // Проверка на диапазон больше 10^12 - 1, но меньше 10^16 - 1
         // if (result > (10**12 - 1) && result <= (10**16 - 1)) {
         //     var adjustedResult = result / 10000;
-<<<<<<< HEAD
         //     // Преобразуем результат в строку и добавляем 4 нуля в конец 
-=======
-        //     // Преобразуем результат в строку и добавляем 4 нуля в конец (симулируем смещение запятой вправо)
->>>>>>> 4fad0cb3ae8b698ec7583ca178d3de077d347ed7
         //     var resultStr = adjustedResult;
         //     // Отображаем результат на экране без десятичной точки
         //     input.value = resultStr;
@@ -98,13 +82,7 @@ buttons.forEach(function(button) {
         else if (btnVal === 'П+'){
             memoryStorage += parseFloat(currentInput);
             console.log(memoryStorage);
-<<<<<<< HEAD
             reset();
-=======
-            //currentInput = '';
-            //shownInput = '';
-            input.value = '';
->>>>>>> 4fad0cb3ae8b698ec7583ca178d3de077d347ed7
 
         }
         else if (btnVal === 'ИП'){
@@ -151,9 +129,4 @@ buttons.forEach(function(button) {
             }
         }
     });
-<<<<<<< HEAD
 });
-=======
-});
-
->>>>>>> 4fad0cb3ae8b698ec7583ca178d3de077d347ed7
