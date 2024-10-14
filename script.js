@@ -12,12 +12,13 @@ var shownInput = '';
 var mistakeCheck = 0;
 var oper = '';
 var timesClicked = 0;
+// при смене знака исчезает дробная часть; убарть возможность нескольких запятых
 function calculate(){
     try{
         if(lastInput === '' && isOperatorClicked === true){
             currentInput += tempInput;
         }
-        if(lastInput !='' && oper !='' && timesClicked >1)
+        if(lastInput !='' && oper !='' && timesClicked >2)
         {
             currentInput+= lastInput;
         }
