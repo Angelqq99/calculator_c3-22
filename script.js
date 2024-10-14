@@ -1,19 +1,33 @@
 const buttons = document.querySelectorAll('.buttons');
 const input = document.querySelector('#display');
-const operators = ['+', '-', '*', '/', '%', '|-|'];
+const operators = ['+', '-', '*', '/','%', '|-|'];
 var decimalAdded = false;
-var memoryStorage = 0;
+var memoryStorage = '0';
 var isOperatorClicked = false;
 var currentInput = ''; // хранение введенных данных
 var firstInput = '';
 var lastInput = '';
 var tempInput = '';
 var shownInput = '';
+var mistakeCheck = 0;
+var oper = '';
 
 function calculate(){
     try{
-        if(lastInput === ''){
+        if(lastInput === '' && isOperatorClicked === true){
             currentInput += tempInput;
+        }
+        if(lastInput !='' && oper !='')
+        {
+            currentInput+= lastInput;
+        }
+        else
+
+         // Обработка процента
+         if (currentInput.includes('%')) {
+            var t = parseFloat(firstInput) /100 *parseFloat(lastInput);
+            currentInput = firstInput + ' '+oper+' '+t;
+            console.log(currentInput);
         }
         currentInput = currentInput.replace(/,/g, '.');
         var result = eval(currentInput);
@@ -22,7 +36,7 @@ function calculate(){
             tempInput = '';
             reset();
             input.value = '............';
-            return;  // Выходим из функции
+            return;  
         }
 
         // // Проверка на диапазон больше 10^12 - 1, но меньше 10^16 - 1
@@ -44,6 +58,7 @@ function calculate(){
         }
         firstInput = '';
         lastInput = '';
+        isOperatorClicked = false;
     } catch(e) {
         input.value = 'Error';
         currentInput = '';
@@ -74,30 +89,50 @@ buttons.forEach(function(button) {
         var btnVal = this.innerHTML;
 
         if(btnVal === '=') {
+            mistakeCheck = 0;
             calculate();
         }
         // Очистка дисплея, добавить исправление ошибки ввода
         else if (btnVal === 'Cx'){
-            reset();
+            if (mistakeCheck === 0) {
+                mistakeCheck = 1;
+                if(lastInput === ''){
+                    currentInput = currentInput.slice(0,-2);
+                }
+                else{
+                lastInput = '';
+                currentInput = currentInput.slice(0,-3);
+                }
+                
+            }
+            else{
+                mistakeCheck = 0;
+                reset();
+            }
         }
         else if (btnVal === 'П+'){
-            memoryStorage += parseFloat(currentInput);
+            mistakeCheck = 0;
+            memoryStorage += parseFloat(shownInput);
             console.log(memoryStorage);
+            reset();
             //currentInput = '';
             //shownInput = '';
-            input.value = '';
+            //input.value = '';
 
         }
         else if (btnVal === 'ИП'){
+            mistakeCheck = 0;
             input.value = memoryStorage;
             currentInput = memoryStorage.toString();
             shownInput = memoryStorage.toString();
         }
         else if (btnVal === 'СП'){
+            mistakeCheck = 0;
             memoryStorage = 0;
             console.log(memoryStorage);
         }
         else if (btnVal === '|-|'){
+            mistakeCheck = 0;
             var reverseNumber = -parseFloat(currentInput);
             input.value = reverseNumber;
             currentInput = reverseNumber.toString();
@@ -105,6 +140,10 @@ buttons.forEach(function(button) {
         }
         // Операции
         else if (operators.includes(btnVal)){
+            if(btnVal != '%'){
+                oper = btnVal;
+            }
+            mistakeCheck = 0;
             isOperatorClicked = true;
             currentInput += ' ' + ' ' + btnVal;
             input.value = shownInput;
@@ -112,6 +151,7 @@ buttons.forEach(function(button) {
         }
         //Добавляем введенное значение
         else {
+            mistakeCheck = 0;
             if(!isOperatorClicked){
                 if(canAddToInput(btnVal)){
                     if(!operators.some(op1 => currentInput.includes(op1))){
@@ -123,12 +163,15 @@ buttons.forEach(function(button) {
                 }
             }
             else{
-                if(operators.some(op => currentInput.includes(op))){
-                    lastInput += btnVal;
+                oper = '';
+              if (canAddToInput(btnVal)) {
+                if (operators.some((op) => currentInput.includes(op))) {
+                  lastInput += btnVal;
                 }
-                    shownInput = lastInput;
-                    currentInput += btnVal;
-                    input.value = shownInput;
+                shownInput = lastInput;
+                currentInput += btnVal;
+                input.value = shownInput;
+              }
             }
         }
     });
