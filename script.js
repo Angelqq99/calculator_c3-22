@@ -4,7 +4,7 @@ const operators = ['+', '-', '*', '/','%', '|-|'];
 var decimalAdded = false;
 var memoryStorage = '0';
 var isOperatorClicked = false;
-var currentInput = ''; // хранение введенных данных
+var currentInput = ''; 
 var firstInput = '';
 var lastInput = '';
 var tempInput = '';
@@ -31,7 +31,6 @@ function calculate(){
         }
         currentInput = currentInput.replace(/,/g, '.');
         var result = eval(currentInput);
-        // Проверка на превышение предела 10^16 - 1
         if(result > (10**16 - 1)) {
             tempInput = '';
             reset();
@@ -42,7 +41,7 @@ function calculate(){
         // // Проверка на диапазон больше 10^12 - 1, но меньше 10^16 - 1
         // if (result > (10**12 - 1) && result <= (10**16 - 1)) {
         //     var adjustedResult = result / 10000;
-        //     // Преобразуем результат в строку и добавляем 4 нуля в конец (симулируем смещение запятой вправо)
+        //     // Преобразуем результат в строку и добавляем 4 нуля в конец 
         //     var resultStr = adjustedResult;
         //     // Отображаем результат на экране без десятичной точки
         //     input.value = resultStr;
@@ -115,9 +114,12 @@ buttons.forEach(function(button) {
             memoryStorage += parseFloat(shownInput);
             console.log(memoryStorage);
             reset();
+<<<<<<< HEAD
             //currentInput = '';
             //shownInput = '';
             //input.value = '';
+=======
+>>>>>>> 40351e39721df0be63731649bad6e129c317ff55
 
         }
         else if (btnVal === 'ИП'){
@@ -176,4 +178,3 @@ buttons.forEach(function(button) {
         }
     });
 });
-
