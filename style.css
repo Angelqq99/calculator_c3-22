@@ -1,81 +1,58 @@
-/*Стиль калькулятора*/
-#calculator{
-    width: 400px;
-        margin: auto;
-        padding: 200px;
-        background-color: #f3f3f3;
-        border-radius: 20px;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+#calculator {
+    display: grid;
+    grid-template-areas:
+        "display display display display"
+        "sp_buttons num_buttons num_buttons calc_buttons";
+    gap: 10px;
+    width: 300px;
 }
 
-/* Стилизация для дисплея */
 #display {
-    display: block;
-    margin: 15px auto;
-    height: 42px;
+    font-family: "Electronica";
+    margin-top: 337px;
+    text-shadow: 2px 1px 1px blue;
+    grid-area: display;
     width: 100%;
-    padding: 0 10px;
-    border-radius: 4px;
-    border-top: 2px solid #C1C1C1;
-    border-right: 2px solid #C1C1C1;
-    border-bottom: 2px solid #FFF;
-    border-left: 2px solid #FFF;
-    background-color: #FFF;
-    box-shadow: inset 0px 0px 10px #030303, inset 0px -20px 1px rgba(150, 150, 150, 0.2);
-    font-size: 28px;
-    color: #666;
-    text-align: right;
-    font-weight: 400;
+    height: 40px;
+    background-color: rgb(26, 24, 24);
+    color: aqua;
+    text-align: left;
+    font-size: 40px;
 }
 
-/* Стили для секции buttons1 */
-#buttons1 .buttons {
-    width: 66px;
-    height: 40px;
-    margin: 5px;
-    background-color: lightblue;
-    display: inline-block;
-    color: black;
-    padding: 10px;
-    margin: 5px;
-    border-radius: 5px;
+#buttons1, #buttons2, #buttons3 {
+    display: grid;
+    gap: 10px;
 }
 
-/* Стили для секции buttons2 */
-#buttons2 .buttons {
-    width: 66px;
-    height: 40px;
-    margin: 5px;
-    background-color: lightgreen;
-    display: inline-block;
-    color: black;
-    padding: 10px;
-    margin: 5px;
-    border-radius: 5px;
+#buttons1 {
+    grid-area: sp_buttons;
+    grid-template-columns: repeat(1, 1fr);
 }
 
-/* Стили для секции buttons3 */
-#buttons3 .buttons {
-    width: 66px;
+#buttons2 {
+    grid-area: num_buttons;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+#buttons3 {
+    grid-area: calc_buttons;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 40px;
-    margin: 5px;
-    background-color: lightcoral;
-    display: inline-block;
+    background-color: rgb(36, 29, 29);
     color: white;
-    padding: 10px;
-    margin: 5px;
-    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    cursor: pointer;
 }
 
-/* Изменение цвета при наведении на кнопку */
-#buttons1 .buttons:hover {
-        background-color: #0056b3;
-    }
-#buttons2 .buttons:hover {
-    background-color: #0056b3;
+#buttons1 .buttons:nth-child(4) {
+    background-color: red;
+    color: white;
 }
-#buttons3 .buttons:hover {
-    background-color: #0056b3;
-}
-
-/*Сдалть расположение кнопок как на оригинальном калькуляторе */
