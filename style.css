@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #calculator {
     display: grid;
     grid-template-areas:
@@ -5,10 +6,27 @@
         "sp_buttons num_buttons num_buttons calc_buttons";
     gap: 10px;
     width: 300px;
+=======
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/*Стиль калькулятора*/
+#calculator{
+    width: 1000px;
+    height: 820px;
+>>>>>>> 6c73f4f7a614f41a81c0914d12e1267203fa1707
 }
 
 #display {
     font-family: "Electronica";
+<<<<<<< HEAD
     margin-top: 337px;
     text-shadow: 2px 1px 1px blue;
     grid-area: display;
@@ -50,9 +68,77 @@
     border: 1px solid #ccc;
     font-size: 16px;
     cursor: pointer;
+=======
+    margin-top: 300px;
+    text-shadow: 2px 1px 1px blue;
+    height: 40px;
+    width: 100%;
+    display: grid;
+    justify-items: auto;
+    grid-column: 1/-1;
+    background-color: rgb(26, 24, 24);
+    color: aqua;
+    font-size: 40px;
+    padding: 4px;
+}
+
+.buttons {
+    margin-top: 337px;
+    margin-left: 10px;
+    display: inline-block;
+    grid-template-columns: repeat(11, 1fr);
+    grid-auto-rows: 40px;
+    gap: 17px;
+}
+
+/* Стили для секции buttons1 */
+#buttons1 .buttons {
+    font-weight: bold;
+    font-size: 20px;
+    width: 80px;
+    height: 40px;
+    margin: 5px;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Стили для секции buttons2 */
+#buttons2 .buttons {
+    font-weight: bold;
+    font-size: 20px;
+    width: 80px;
+    height: 40px;
+    margin: 5px;
+    background-color: black;
+    box-shadow: 2px 3px 2px rgb(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Стили для секции buttons3 */
+#buttons3 .buttons {
+    font-weight: bold;
+    font-size: 20px;
+    width: 80px;
+    height: 40px;
+    margin: 5px;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+>>>>>>> 6c73f4f7a614f41a81c0914d12e1267203fa1707
 }
 
 #buttons1 .buttons:nth-child(4) {
     background-color: red;
     color: white;
 }
+<<<<<<< HEAD
+=======
+#buttons3 .buttons:hover {
+    background-color: #0056b3;
+}
+>>>>>>> 6c73f4f7a614f41a81c0914d12e1267203fa1707

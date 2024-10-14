@@ -11,16 +11,29 @@ var tempInput = '';
 var shownInput = '';
 var mistakeCheck = 0;
 var oper = '';
+<<<<<<< HEAD
 var timesClicked = 0;
+=======
+
+>>>>>>> 6c73f4f7a614f41a81c0914d12e1267203fa1707
 function calculate(){
     try{
         if(lastInput === '' && isOperatorClicked === true){
             currentInput += tempInput;
         }
+<<<<<<< HEAD
         if(lastInput !='' && oper !='' && timesClicked >1)
         {
             currentInput+= lastInput;
         }
+=======
+        if(lastInput !='' && oper !='')
+        {
+            currentInput+= lastInput;
+        }
+        else
+
+>>>>>>> 6c73f4f7a614f41a81c0914d12e1267203fa1707
          // Обработка процента
          if (currentInput.includes('%')) {
             var t = parseFloat(firstInput) /100 *parseFloat(lastInput);
@@ -55,7 +68,10 @@ function calculate(){
         }
         firstInput = '';
         lastInput = '';
+<<<<<<< HEAD
         timesClicked = 0;
+=======
+>>>>>>> 6c73f4f7a614f41a81c0914d12e1267203fa1707
         isOperatorClicked = false;
     } catch(e) {
         input.value = 'Error';
@@ -109,14 +125,26 @@ buttons.forEach(function(button) {
             }
         }
         else if (btnVal === 'П+'){
+<<<<<<< HEAD
             memoryStorage = '';
+=======
+>>>>>>> 6c73f4f7a614f41a81c0914d12e1267203fa1707
             mistakeCheck = 0;
             memoryStorage += parseFloat(shownInput);
             console.log(memoryStorage);
             reset();
+<<<<<<< HEAD
             //currentInput = '';
             //shownInput = '';
             //input.value = '';
+=======
+<<<<<<< HEAD
+            //currentInput = '';
+            //shownInput = '';
+            //input.value = '';
+=======
+>>>>>>> 40351e39721df0be63731649bad6e129c317ff55
+>>>>>>> 6c73f4f7a614f41a81c0914d12e1267203fa1707
 
         }
         else if (btnVal === 'ИП'){
@@ -142,7 +170,10 @@ buttons.forEach(function(button) {
             if(btnVal != '%'){
                 oper = btnVal;
             }
+<<<<<<< HEAD
             timesClicked += 1;
+=======
+>>>>>>> 6c73f4f7a614f41a81c0914d12e1267203fa1707
             mistakeCheck = 0;
             isOperatorClicked = true;
             currentInput += ' ' + ' ' + btnVal;
@@ -163,7 +194,11 @@ buttons.forEach(function(button) {
                 }
             }
             else{
+<<<<<<< HEAD
                 //oper = '';
+=======
+                oper = '';
+>>>>>>> 6c73f4f7a614f41a81c0914d12e1267203fa1707
               if (canAddToInput(btnVal)) {
                 if (operators.some((op) => currentInput.includes(op))) {
                   lastInput += btnVal;
