@@ -2,7 +2,7 @@ const buttons = document.querySelectorAll('.buttons');
 const input = document.querySelector('#display');
 const operators = ['+', '-', '*', '/','%', '|-|'];
 var decimalAdded = false;
-var memoryStorage = '0';
+var memoryStorage = 0;
 var isOperatorClicked = false;
 var currentInput = ''; 
 var firstInput = '';
@@ -12,24 +12,29 @@ var shownInput = '';
 var mistakeCheck = 0;
 var oper = '';
 var timesClicked = 0;
-input.value = '0';
+var pointActive = false;
+input.value = '0.';
 // при смене знака исчезает дробная часть; убарть возможность нескольких запятых
 function calculate(){
     try{
         if(lastInput === '' && isOperatorClicked === true){
             currentInput += tempInput;
         }
-        if(lastInput !='' && oper !='' && timesClicked >2)
+        if(lastInput !='' && oper !='' && timesClicked >=2)
         {
             currentInput+= lastInput;
-        }
-         // Обработка процента
+        }         // Обработка процента
          if (currentInput.includes('%')) {
             var t = parseFloat(firstInput) /100 *parseFloat(lastInput);
-            currentInput = firstInput + ' '+oper+' '+t;
+            if(oper!= ''){
+                currentInput = firstInput + ' '+oper+' '+t;
+            }
+            else{
+                currentInput = t;
+            }
             console.log(currentInput);
         }
-        currentInput = currentInput.replace(/,/g, '.');
+        //currentInput = currentInput.replace(/,/g, '.');
         var result = eval(currentInput);
         if(result > (10**16 - 1)) {
             tempInput = '';
@@ -49,7 +54,7 @@ function calculate(){
         //     return;
         // }
 
-        input.value = result;
+        input.value = result+'.';
         currentInput = result.toString();
         shownInput = result.toString();
         if(lastInput != ''){
@@ -78,8 +83,9 @@ function reset(){
     lastInput = '';  
     firstInput = '';  
     tempInput = '';  
-    input.value = '0';  
+    input.value = '0.';  
     isOperatorClicked = false;  
+    pointActive = false;
 
 }
 
@@ -111,7 +117,6 @@ buttons.forEach(function(button) {
             }
         }
         else if (btnVal === 'П+'){
-            memoryStorage = '';
             mistakeCheck = 0;
             memoryStorage += parseFloat(shownInput);
             console.log(memoryStorage);
@@ -122,7 +127,7 @@ buttons.forEach(function(button) {
         }
         else if (btnVal === 'ИП'){
             mistakeCheck = 0;
-            input.value = memoryStorage;
+            input.value = memoryStorage+'.';
             currentInput = memoryStorage.toString();
             shownInput = memoryStorage.toString();
         }
@@ -134,7 +139,7 @@ buttons.forEach(function(button) {
         else if (btnVal === '|-|'){
             mistakeCheck = 0;
             var reverseNumber = -parseFloat(currentInput);
-            input.value = reverseNumber;
+            input.value = reverseNumber+'.';
             currentInput = reverseNumber.toString();
             shownInput = currentInput;
         }
@@ -147,7 +152,7 @@ buttons.forEach(function(button) {
             mistakeCheck = 0;
             isOperatorClicked = true;
             currentInput += ' ' + ' ' + btnVal;
-            input.value = shownInput;
+            input.value = shownInput+'.';
             shownInput = '';
         }
         //Добавляем введенное значение
@@ -160,7 +165,7 @@ buttons.forEach(function(button) {
                     } 
                     shownInput += btnVal;
                     currentInput += btnVal;
-                    input.value = shownInput;
+                    input.value = shownInput+'.';
                 }
             }
             else{
@@ -171,7 +176,7 @@ buttons.forEach(function(button) {
                 }
                 shownInput = lastInput;
                 currentInput += btnVal;
-                input.value = shownInput;
+                input.value = shownInput+'.';
               }
             }
         }
