@@ -11,18 +11,18 @@ var tempInput = '';
 var shownInput = '';
 var mistakeCheck = 0;
 var oper = '';
-
+var timesClicked = 0;
+input.value = '0';
+// при смене знака исчезает дробная часть; убарть возможность нескольких запятых
 function calculate(){
     try{
         if(lastInput === '' && isOperatorClicked === true){
             currentInput += tempInput;
         }
-        if(lastInput !='' && oper !='')
+        if(lastInput !='' && oper !='' && timesClicked >2)
         {
             currentInput+= lastInput;
         }
-        else
-
          // Обработка процента
          if (currentInput.includes('%')) {
             var t = parseFloat(firstInput) /100 *parseFloat(lastInput);
@@ -57,6 +57,7 @@ function calculate(){
         }
         firstInput = '';
         lastInput = '';
+        timesClicked = 0;
         isOperatorClicked = false;
     } catch(e) {
         input.value = 'Error';
@@ -77,7 +78,7 @@ function reset(){
     lastInput = '';  
     firstInput = '';  
     tempInput = '';  
-    input.value = '';  
+    input.value = '0';  
     isOperatorClicked = false;  
 
 }
@@ -110,17 +111,14 @@ buttons.forEach(function(button) {
             }
         }
         else if (btnVal === 'П+'){
+            memoryStorage = '';
             mistakeCheck = 0;
             memoryStorage += parseFloat(shownInput);
             console.log(memoryStorage);
             reset();
-<<<<<<< HEAD
             //currentInput = '';
             //shownInput = '';
             //input.value = '';
-=======
->>>>>>> 40351e39721df0be63731649bad6e129c317ff55
-
         }
         else if (btnVal === 'ИП'){
             mistakeCheck = 0;
@@ -145,6 +143,7 @@ buttons.forEach(function(button) {
             if(btnVal != '%'){
                 oper = btnVal;
             }
+            timesClicked += 1;
             mistakeCheck = 0;
             isOperatorClicked = true;
             currentInput += ' ' + ' ' + btnVal;
@@ -165,7 +164,7 @@ buttons.forEach(function(button) {
                 }
             }
             else{
-                oper = '';
+                //oper = '';
               if (canAddToInput(btnVal)) {
                 if (operators.some((op) => currentInput.includes(op))) {
                   lastInput += btnVal;

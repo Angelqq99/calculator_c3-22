@@ -1,91 +1,104 @@
-* {
-    box-sizing: border-box;
-}
-body {
+body, html {
+    height: 100%;
     margin: 0;
-    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-/*Стиль калькулятора*/
-#calculator{
-    width: 1000px;
-    height: 820px;
+
+#calculator {
+    display: grid;
+    grid-template-areas:
+        "display display display display"
+        "sp_buttons num_buttons num_buttons calc_buttons";
+    gap: 50px;
+    width: 600px;
+    height: 700px; /* задайте высоту для отображения фона */
+    background-image: url(calc.png);
+    background-size: cover; /* чтобы изображение полностью покрывало фон */
+    background-position: center; /* выравнивание по центру */
 }
 
-/* Стилизация для дисплея */
 #display {
     font-family: "Electronica";
-    margin-top: 300px;
+    margin-top: 260px;
+    margin-left: 70px;
     text-shadow: 2px 1px 1px blue;
+    grid-area: display;
+    width: 455px;
     height: 40px;
-    width: 100%;
-    display: grid;
-    justify-items: auto;
-    grid-column: 1/-1;
     background-color: rgb(26, 24, 24);
     color: aqua;
+    text-align: left;
     font-size: 40px;
-    padding: 4px;
+}
+
+#buttons1, #buttons2, #buttons3 {
+    display: grid;
+
+}
+
+#buttons1 {
+    grid-area: sp_buttons;
+    grid-template-columns: repeat(1, 1fr);
+    margin-left: 50px; /* Поднимаем блок с кнопками слева */
+    height: 50px;
+}
+
+#buttons2 {
+    grid-area: num_buttons;
+    height: 50px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: -10px;
+    margin-right: -20px;
+    margin-bottom: 50px;
+}
+
+#buttons3 {
+    grid-area: calc_buttons;
+    grid-template-columns: repeat(2, 1fr);
+    margin-right: 90px; /* Поднимаем блок с кнопками слева */
+    height: -20px;
+    gap: -10px;
 }
 
 .buttons {
-    margin-top: 337px;
-    margin-left: 10px;
-    display: inline-block;
-    grid-template-columns: repeat(11, 1fr);
-    grid-auto-rows: 40px;
-    gap: 17px;
-}
-
-/* Стили для секции buttons1 */
-#buttons1 .buttons {
-    font-weight: bold;
-    font-size: 20px;
-    width: 80px;
-    height: 40px;
-    margin: 5px;
-    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px; /* Увеличиваем высоту кнопок */
+    width: 25px; /* Фиксируем ширину кнопок */
+    background-color: rgb(36, 29, 29); /* Темно-серый цвет кнопок */
     color: white;
-    padding: 10px;
-    border-radius: 5px;
+    border: 1px solid #333; /* Более темная рамка */
+    padding: 0 22px;
+    font-size: 18px; /* Увеличиваем размер шрифта */
+    cursor: pointer;
+    border-radius: 6px; /* Закругляем углы для большей схожести */
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5), 0 2px 2px rgba(0, 0, 0, 0.5); /* Внутренняя тень для эффекта углубления */
 }
 
-/* Стили для секции buttons2 */
-#buttons2 .buttons {
-    font-weight: bold;
-    font-size: 20px;
-    width: 80px;
-    height: 40px;
-    margin: 5px;
-    background-color: black;
-    box-shadow: 2px 3px 2px rgb(0, 0, 0, 0.5);
+#buttons1 .buttons:nth-child(4) {
+    background-color: red;
     color: white;
-    padding: 10px;
-    border-radius: 5px;
 }
 
-/* Стили для секции buttons3 */
-#buttons3 .buttons {
-    font-weight: bold;
-    font-size: 20px;
-    width: 80px;
-    height: 40px;
-    margin: 5px;
-    background-color: black;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
+#buttons2 .buttons:nth-child(10) {
+    width: 100;
 }
 
-/* Изменение цвета при наведении на кнопку */
-#buttons1 .buttons:hover {
-        background-color: #0056b3;
-    }
-#buttons2 .buttons:hover {
-    background-color: #0056b3;
+.buttons:active {
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.2), 0 2px 2px rgba(0, 0, 0, 0.7); /* Эффект нажатия */
 }
-#buttons3 .buttons:hover {
-    background-color: #0056b3;
+
+/* Увеличиваем кнопку "0" */
+#buttons2 .buttons:nth-child(10) {
+    grid-column: span 2; /* Занимает две колонки */
+    width: 100px;
+}
+
+/* Увеличиваем кнопку "=" */
+#buttons3 .buttons:nth-child(6) {
+    grid-row: span 2; /* Занимает две строки */
+    height: 130px; /* Увеличиваем высоту */
 }
