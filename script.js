@@ -12,10 +12,7 @@ var shownInput = '';
 var mistakeCheck = 0;
 var oper = '';
 var timesClicked = 0;
-<<<<<<< HEAD
 input.value = '0';
-=======
->>>>>>> c199256c47fc1e2e17c01df163f3cbd7e1e4cb76
 // при смене знака исчезает дробная часть; убарть возможность нескольких запятых
 function calculate(){
     try{
