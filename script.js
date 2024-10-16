@@ -55,6 +55,12 @@ function calculate(){
         // }
 
         input.value = result+'.';
+        if (input.value.endsWith('.') && pointActive === true && !Number.isInteger(result) ) {
+            input.value = input.value.slice(0, -1);
+        }
+        else{
+            pointActive = false;
+        }
         currentInput = result.toString();
         shownInput = result.toString();
         if(lastInput != ''){
@@ -153,7 +159,20 @@ buttons.forEach(function(button) {
             isOperatorClicked = true;
             currentInput += ' ' + ' ' + btnVal;
             input.value = shownInput+'.';
+            if (input.value.endsWith('.') && pointActive === true) {
+                input.value = input.value.slice(0, -1);
+            }
+            pointActive = false;
             shownInput = '';
+        }
+        else if(btnVal === '.')
+        {
+            if (!shownInput.includes('.')) {  // Проверка на наличие точки
+                pointActive = true;
+                shownInput += btnVal;
+                currentInput += btnVal;
+                input.value = shownInput;
+            }
         }
         //Добавляем введенное значение
         else {
@@ -178,6 +197,9 @@ buttons.forEach(function(button) {
                 currentInput += btnVal;
                 input.value = shownInput+'.';
               }
+            }
+            if (input.value.endsWith('.') && pointActive === true) {
+                input.value = input.value.slice(0, -1);
             }
         }
     });
