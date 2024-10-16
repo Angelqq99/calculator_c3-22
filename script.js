@@ -140,6 +140,7 @@ buttons.forEach(function(button) {
         else if (btnVal === 'СП'){
             mistakeCheck = 0;
             memoryStorage = 0;
+            //shownInput = '';
             console.log(memoryStorage);
         }
         else if (btnVal === '|-|'){
