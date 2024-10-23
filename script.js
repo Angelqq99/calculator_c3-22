@@ -1,7 +1,6 @@
 const buttons = document.querySelectorAll('.buttons');
 const input = document.querySelector('#display');
 const operators = ['+', '-', '*', '/','%', '|-|'];
-var decimalAdded = false;
 var memoryStorage = 0;
 var isOperatorClicked = false;
 var currentInput = ''; 
@@ -14,7 +13,6 @@ var oper = '';
 var timesClicked = 0;
 var pointActive = false;
 input.value = '0.';
-// при смене знака исчезает дробная часть; убарть возможность нескольких запятых
 function calculate(){
     try{
         if(lastInput === '' && isOperatorClicked === true){
@@ -36,23 +34,12 @@ function calculate(){
         }
         //currentInput = currentInput.replace(/,/g, '.');
         var result = eval(currentInput);
-        if(result > (10**16 - 1)) {
+        if(result > (10**16 - 1) || (result).length>=15) {
             tempInput = '';
             reset();
             input.value = '............';
             return;  
         }
-
-        // // Проверка на диапазон больше 10^12 - 1, но меньше 10^16 - 1
-        // if (result > (10**12 - 1) && result <= (10**16 - 1)) {
-        //     var adjustedResult = result / 10000;
-        //     // Преобразуем результат в строку и добавляем 4 нуля в конец 
-        //     var resultStr = adjustedResult;
-        //     // Отображаем результат на экране без десятичной точки
-        //     input.value = resultStr;
-        //     currentInput = resultStr;  
-        //     return;
-        // }
 
         input.value = result+'.';
         if (input.value.endsWith('.') && pointActive === true && !Number.isInteger(result) ) {
@@ -61,6 +48,18 @@ function calculate(){
         else{
             pointActive = false;
         }
+        if ((result > (10**12 - 1) && result <= (10**16 - 1)) || (result.toString().replace('.', '').length >= 12 && result.toString().replace('.', '').length <= 15)) {
+            var adjustedResult = result / 10000;
+            console.log(result);
+            // Преобразуем результат в строку и удаляем возможную десятичную точку
+            var resultStr = adjustedResult.toFixed(0);  // Округляем до целого числа
+
+            // Отображаем результат на экране без десятичной точки
+            input.value = resultStr;
+            currentInput = resultStr;  
+            return;
+        }
+
         currentInput = result.toString();
         shownInput = result.toString();
         if(lastInput != ''){
@@ -84,14 +83,17 @@ function canAddToInput(value) {
 }
 
 function reset(){
-    currentInput = '';  
-    shownInput = '';  
-    lastInput = '';  
-    firstInput = '';  
-    tempInput = '';  
-    input.value = '0.';  
-    isOperatorClicked = false;  
+    isOperatorClicked = false;
+    currentInput = ''; 
+    firstInput = '';
+    lastInput = '';
+    tempInput = '';
+    shownInput = '';
+    mistakeCheck = 0;
+    oper = '';
+    timesClicked = 0;
     pointActive = false;
+    input.value = '0.';
 
 }
 
@@ -106,30 +108,34 @@ buttons.forEach(function(button) {
         }
         // Очистка дисплея, добавить исправление ошибки ввода
         else if (btnVal === 'Cx'){
-            if (mistakeCheck === 0) {
-                mistakeCheck = 1;
-                if(lastInput === ''){
-                    currentInput = currentInput.slice(0,-2);
-                }
-                else{
-                lastInput = '';
-                currentInput = currentInput.slice(0,-3);
-                }
-                
-            }
-            else{
-                mistakeCheck = 0;
-                reset();
-            }
+            // if(isOperatorClicked === false){
+            //     mistakeCheck = 0;
+            //     reset();
+            // }
+            //     else if (mistakeCheck === 0) {
+            //         mistakeCheck = 1;
+            //         isOperatorClicked = false;
+            //         if(lastInput === ''){
+            //             currentInput = currentInput.slice(0,-2);
+            //         }
+            //         else{
+            //         lastInput = '';
+            //         shownInput = '';
+            //         input.value = '.';
+            //         currentInput = currentInput.slice(0,-3);
+            //         }
+                    
+            //     }
+            //     else{
+                    mistakeCheck = 0;
+                    reset();
+               // }
         }
         else if (btnVal === 'П+'){
             mistakeCheck = 0;
             memoryStorage += parseFloat(shownInput);
             console.log(memoryStorage);
-            reset();
-            //currentInput = '';
-            //shownInput = '';
-            //input.value = '';
+           // reset();
         }
         else if (btnVal === 'ИП'){
             mistakeCheck = 0;
@@ -189,12 +195,11 @@ buttons.forEach(function(button) {
                 }
             }
             else{
-                //oper = '';
               if (canAddToInput(btnVal)) {
                 if (operators.some((op) => currentInput.includes(op))) {
                   lastInput += btnVal;
                 }
-                shownInput = lastInput;
+                shownInput += btnVal;
                 currentInput += btnVal;
                 input.value = shownInput+'.';
               }
