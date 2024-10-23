@@ -49,14 +49,7 @@ function calculate(){
             pointActive = false;
         }
         if ((result > (10**12 - 1) && result <= (10**16 - 1)) || (result.toString().replace('.', '').length >= 12 && result.toString().replace('.', '').length <= 15)) {
-            var adjustedResult = result / 10000;
-            console.log(result);
-            // Преобразуем результат в строку и удаляем возможную десятичную точку
-            var resultStr = adjustedResult.toFixed(0);  // Округляем до целого числа
-
-            // Отображаем результат на экране без десятичной точки
-            input.value = resultStr;
-            currentInput = resultStr;  
+            console.log(result); 
             return;
         }
 

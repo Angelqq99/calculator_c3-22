@@ -3,7 +3,8 @@
     <head>
         <title>instructions</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width"> <!-- Масштаб страницы 1.5x -->
+
         <style>
             img {
                 display: block;
@@ -11,7 +12,7 @@
             }
 
             form {
-                position: absolute;
+                position: fixed; /* Фиксируем кнопку на экране */
                 top: 10px;
                 right: 10px;
             }
@@ -29,6 +30,9 @@
 
             input[type="submit"]:hover {
                 background-color: #45a049; /* Цвет фона при наведении */
+            }
+            body{
+               zoom: 1.8; 
             }
         </style>
     </head>
