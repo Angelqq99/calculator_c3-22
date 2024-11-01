@@ -12,6 +12,7 @@ var mistakeCheck = 0;
 var oper = '';
 var timesClicked = 0;
 var pointActive = false;
+var overFlow = false;
 input.value = '0.';
 function calculate(){
     try{
@@ -49,8 +50,16 @@ function calculate(){
             pointActive = false;
         }
         if ((result > (10**12 - 1) && result <= (10**16 - 1)) || (result.toString().replace('.', '').length >= 12 && result.toString().replace('.', '').length <= 15)) {
+            input.value = result.toString().replace('.', '').slice(0, 12);
+            overFlow = true;
             console.log(result); 
-            return;
+        }
+        if(oper === '/' && overFlow === true){
+            console.log(result); 
+            result = parseInt(result);
+            input.value = input.value.slice(0,-3).toString();
+            currentInput = parseInt(result).toString();
+            showInput = parseInt(result).toString();
         }
 
         currentInput = result.toString();
@@ -101,28 +110,29 @@ buttons.forEach(function(button) {
         }
         // Очистка дисплея, добавить исправление ошибки ввода
         else if (btnVal === 'Cx'){
-            // if(isOperatorClicked === false){
-            //     mistakeCheck = 0;
-            //     reset();
-            // }
-            //     else if (mistakeCheck === 0) {
-            //         mistakeCheck = 1;
-            //         isOperatorClicked = false;
-            //         if(lastInput === ''){
-            //             currentInput = currentInput.slice(0,-2);
-            //         }
-            //         else{
-            //         lastInput = '';
-            //         shownInput = '';
-            //         input.value = '.';
-            //         currentInput = currentInput.slice(0,-3);
-            //         }
+            if(isOperatorClicked === false){
+                mistakeCheck = 0;
+                reset();
+            }
+                else if (mistakeCheck === 0) {
+                    mistakeCheck = 1;
+                    isOperatorClicked = false;
+                    if(lastInput === ''){
+                        currentInput = currentInput.slice(0,-2);
+                    }
+                    else{
+                    lastInput = '';
+                    shownInput = '';
+                    timesClicked = 0;
+                    input.value = '0.';
+                    currentInput = currentInput.slice(0,-3);
+                    }
                     
-            //     }
-            //     else{
+                }
+                else{
                     mistakeCheck = 0;
                     reset();
-               // }
+                }
         }
         else if (btnVal === 'П+'){
             mistakeCheck = 0;
