@@ -1,6 +1,11 @@
+/*
+ToDoList:
+1)при вводе нового числа после получения результата в начале стоит 0. Пример: 5+1 = 6 -> новый ввод 06+2
+2) если при вычислениях целых чисел получается дробное, то в конце почему-то точка (upd. вроде пофиксил)
+*/
 const buttons = document.querySelectorAll('.buttons');
 const input = document.querySelector('#display');
-const operators = ['+', '-', '*', '/','%', '|-|'];
+const operators = ['+', '-', '*', '/','%', '/-/', '÷'];
 var memoryStorage = 0;
 var isOperatorClicked = false;
 var currentInput = ''; 
@@ -13,11 +18,40 @@ var oper = '';
 var timesClicked = 0;
 var pointActive = false;
 var overFlow = false;
+var saveData = '';
+var saveResult = '';
+var resultDisplayed = false;
+var a =0;
 input.value = '0.';
+
 function calculate(){
     try{
         if(lastInput === '' && isOperatorClicked === true){
-            currentInput += tempInput;
+            if(lastInput === '' && firstInput!=''){
+                currentInput+= firstInput;
+                console.log(currentInput);
+                tempInput = firstInput;
+            }else{
+                currentInput += tempInput;
+            }
+        }
+        if(firstInput === ''){
+            if(lastInput === '')
+            {
+                if(saveResult != '' && tempInput != ''){
+                    currentInput = saveResult + oper +tempInput;
+                }else{
+                    return;
+                }
+            }
+            else{
+                if(saveResult!=''){
+                currentInput = saveResult + oper +lastInput;
+                }else{
+                    currentInput = '0' + oper +lastInput;
+                    console.log(currentInput);
+                }
+            }
         }
         if(lastInput !='' && oper !='' && timesClicked >=2)
         {
@@ -33,42 +67,51 @@ function calculate(){
             }
             console.log(currentInput);
         }
-        //currentInput = currentInput.replace(/,/g, '.');
+        
         var result = eval(currentInput);
-        if(result > (10**16 - 1) || (result).length>=15) {
+        console.log(currentInput);
+        if(result > (10**16 - 1) || (result).length>=15 || currentInput === '0  /0') {
             tempInput = '';
             reset();
             input.value = '............';
             return;  
         }
-
+        if(overFlow === true && tempInput != '')
+        {
+            result = parseInt(result);
+        }
+        if (!Number.isInteger(result)) {
+            let resultString = result.toString();
+            let integerPartLength = resultString.split('.')[0].length; // Длина целой части
+            let maxDecimalPlaces = 12 - integerPartLength; // Максимум знаков после запятой, чтобы общее количество было 12
+            if (maxDecimalPlaces < 0) maxDecimalPlaces = 0; // Если целая часть уже превышает 12 знаков
+            result = parseFloat(result.toFixed(maxDecimalPlaces)); // Округляем до вычисленного количества знаков
+        }
         input.value = result+'.';
-        if (input.value.endsWith('.') && pointActive === true && !Number.isInteger(result) ) {
+        if (input.value.endsWith('.') && !Number.isInteger(result) ) {
             input.value = input.value.slice(0, -1);
         }
         else{
             pointActive = false;
         }
-        if ((result > (10**12 - 1) && result <= (10**16 - 1)) || (result.toString().replace('.', '').length >= 12 && result.toString().replace('.', '').length <= 15)) {
-            input.value = result.toString().replace('.', '').slice(0, 12);
-            overFlow = true;
-            console.log(result); 
-        }
-        if(oper === '/' && overFlow === true){
-            console.log(result); 
-            result = parseInt(result);
-            input.value = input.value.slice(0,-3).toString();
-            currentInput = parseInt(result).toString();
-            showInput = parseInt(result).toString();
-        }
-
+        //|| (result.toString().replace('.', '').length >= 12 && result.toString().replace('.', '').length <= 15) || (currentInput).length>=15
         currentInput = result.toString();
+        if (result > (10**12 - 1) && result <= (10**16 - 1))  {
+            // result = parseInt(result);
+             input.value = result.toString().slice(0, 12);
+             overFlow = true;
+             console.log(result); 
+         }
         shownInput = result.toString();
         if(lastInput != ''){
             tempInput = lastInput;
         }
+        resultDisplayed = true;
+        saveResult = result.toString(); 
         firstInput = '';
         lastInput = '';
+        shownInput = '0';
+        currentInput = '';
         timesClicked = 0;
         isOperatorClicked = false;
     } catch(e) {
@@ -95,6 +138,7 @@ function reset(){
     oper = '';
     timesClicked = 0;
     pointActive = false;
+    overFlow = false;
     input.value = '0.';
 
 }
@@ -103,7 +147,10 @@ function reset(){
 buttons.forEach(function(button) {
     button.addEventListener('click', function() {
         var btnVal = this.innerHTML;
-
+        if(btnVal === '÷'){
+                btnVal = '/';
+                oper = '/';
+        } 
         if(btnVal === '=') {
             mistakeCheck = 0;
             calculate();
@@ -118,7 +165,9 @@ buttons.forEach(function(button) {
                     mistakeCheck = 1;
                     isOperatorClicked = false;
                     if(lastInput === ''){
-                        currentInput = currentInput.slice(0,-2);
+                        //currentInput = currentInput.slice(0,-2);
+                        mistakeCheck = 0;
+                        reset();
                     }
                     else{
                     lastInput = '';
@@ -136,15 +185,35 @@ buttons.forEach(function(button) {
         }
         else if (btnVal === 'П+'){
             mistakeCheck = 0;
-            memoryStorage += parseFloat(shownInput);
+            if(isOperatorClicked)
+            {
+                memoryStorage += parseFloat(saveData);
+            }
+            else{
+                if(saveResult=== ''){
+                    memoryStorage += parseFloat(firstInput);
+                }else{
+                    memoryStorage += parseFloat(saveResult);
+                }
+            }
             console.log(memoryStorage);
            // reset();
         }
         else if (btnVal === 'ИП'){
+            if(isOperatorClicked){
+                console.log('1');
+                lastInput = memoryStorage.toString();
+                currentInput += memoryStorage.toString();
+                mistakeCheck =0;
+            }
+            else{
+            console.log('2');
             mistakeCheck = 0;
             input.value = memoryStorage+'.';
             currentInput = memoryStorage.toString();
+            saveResult = memoryStorage.toString();
             shownInput = memoryStorage.toString();
+            }
         }
         else if (btnVal === 'СП'){
             mistakeCheck = 0;
@@ -152,17 +221,34 @@ buttons.forEach(function(button) {
             //shownInput = '';
             console.log(memoryStorage);
         }
-        else if (btnVal === '|-|'){
+        else if (btnVal === '/-/'){
             mistakeCheck = 0;
-            var reverseNumber = -parseFloat(currentInput);
-            input.value = reverseNumber+'.';
-            currentInput = reverseNumber.toString();
-            shownInput = currentInput;
+    let reverseNumber;
+    
+    if (resultDisplayed) {
+        reverseNumber = -parseFloat(saveResult);
+        saveResult = reverseNumber.toString(); 
+    } else {
+        reverseNumber = -parseFloat(currentInput);
+    }
+
+    // Обновляем значения для отображения
+    input.value = reverseNumber + '.';
+    currentInput = reverseNumber.toString();
+    shownInput = currentInput;
+    
+    if (input.value.endsWith('.') && pointActive === true) {
+        input.value = input.value.slice(0, -1);
+    }
         }
         // Операции
         else if (operators.includes(btnVal)){
+            
             if(btnVal != '%'){
                 oper = btnVal;
+            }  
+            if(isOperatorClicked === true ){
+                return;
             }
             timesClicked += 1;
             mistakeCheck = 0;
@@ -173,7 +259,11 @@ buttons.forEach(function(button) {
                 input.value = input.value.slice(0, -1);
             }
             pointActive = false;
+            saveData = shownInput;
             shownInput = '';
+            // if(oper === '/' && overFlow === true){
+            //     input.value = currentInput.toString().replace('.', '').slice(0, 12);
+            // }
         }
         else if(btnVal === '.')
         {
@@ -182,6 +272,12 @@ buttons.forEach(function(button) {
                 shownInput += btnVal;
                 currentInput += btnVal;
                 input.value = shownInput;
+                if(!operators.some(op1 => currentInput.includes(op1))){
+                    firstInput += btnVal;
+                } 
+                if (operators.some((op) => currentInput.includes(op))) {
+                    lastInput += btnVal;
+                  }
             }
         }
         //Добавляем введенное значение
