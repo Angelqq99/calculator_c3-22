@@ -1,7 +1,5 @@
 /*
 ToDoList:
-1)при вводе нового числа после получения результата в начале стоит 0. Пример: 5+1 = 6 -> новый ввод 06+2
-2) если при вычислениях целых чисел получается дробное, то в конце почему-то точка (upd. вроде пофиксил)
 */
 const buttons = document.querySelectorAll('.buttons');
 const input = document.querySelector('#display');
@@ -79,6 +77,7 @@ function calculate(){
         if(overFlow === true && tempInput != '')
         {
             result = parseInt(result);
+            overFlow = false;
         }
         if (!Number.isInteger(result)) {
             let resultString = result.toString();
@@ -88,7 +87,7 @@ function calculate(){
             result = parseFloat(result.toFixed(maxDecimalPlaces)); // Округляем до вычисленного количества знаков
         }
         input.value = result+'.';
-        if (input.value.endsWith('.') && !Number.isInteger(result) ) {
+        if (input.value.endsWith('.') && !Number.isInteger(result) ) {    //!Number.isInteger(result)
             input.value = input.value.slice(0, -1);
         }
         else{
@@ -222,24 +221,31 @@ buttons.forEach(function(button) {
             console.log(memoryStorage);
         }
         else if (btnVal === '/-/'){
+            console.log(pointActive);
+            if( saveResult.toString().includes('.') && pointActive === false){
+                pointActive = true;
+            }
+            if (input.value.endsWith('.') && pointActive === true) {
+                input.value = input.value.slice(0, -1);
+            }
             mistakeCheck = 0;
-    let reverseNumber;
+            let reverseNumber;
     
-    if (resultDisplayed) {
-        reverseNumber = -parseFloat(saveResult);
-        saveResult = reverseNumber.toString(); 
-    } else {
-        reverseNumber = -parseFloat(currentInput);
-    }
+            if (resultDisplayed) {
+                reverseNumber = -parseFloat(saveResult);
+                saveResult = reverseNumber.toString(); 
+            } else {
+                reverseNumber = -parseFloat(currentInput);
+            }
 
-    // Обновляем значения для отображения
-    input.value = reverseNumber + '.';
-    currentInput = reverseNumber.toString();
-    shownInput = currentInput;
-    
-    if (input.value.endsWith('.') && pointActive === true) {
-        input.value = input.value.slice(0, -1);
-    }
+            // Обновляем значения для отображения
+            input.value = reverseNumber + '.';
+            currentInput = reverseNumber.toString();
+            shownInput = currentInput;
+            
+            if (input.value.endsWith('.') && pointActive === true) {
+                input.value = input.value.slice(0, -1);
+            }
         }
         // Операции
         else if (operators.includes(btnVal)){
