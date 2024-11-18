@@ -57,6 +57,7 @@ function calculate(){
         }         // Обработка процента
          if (currentInput.includes('%')) {
             var t = parseFloat(firstInput) /100 *parseFloat(lastInput);
+            console.log(t);
             if(oper!= ''){
                 currentInput = firstInput + ' '+oper+' '+t;
             }
@@ -64,14 +65,19 @@ function calculate(){
                 currentInput = t;
             }
             console.log(currentInput);
+            if (input.value.endsWith('.') && pointActive === true) {
+                input.value = input.value.slice(0, -1);
+            }
         }
         
         var result = eval(currentInput);
         console.log(currentInput);
-        if(result > (10**16 - 1) || (result).length>=15 || currentInput === '0  /0') {
+        if(result > (10**16 - 1) || (result).length>=15 || currentInput === '0  /0' || currentInput ==='0/0') {
             tempInput = '';
             reset();
             input.value = '............';
+            shownInput = '0';
+            resultDisplayed = true;
             return;  
         }
         if(overFlow === true && tempInput != '')
@@ -133,11 +139,14 @@ function reset(){
     lastInput = '';
     tempInput = '';
     shownInput = '';
+    saveResult = '';
+    saveData = '';
     mistakeCheck = 0;
     oper = '';
     timesClicked = 0;
     pointActive = false;
     overFlow = false;
+    resultDisplayed = false;
     input.value = '0.';
 
 }
@@ -146,6 +155,7 @@ function reset(){
 buttons.forEach(function(button) {
     button.addEventListener('click', function() {
         var btnVal = this.innerHTML;
+        console.log(btnVal);
         if(btnVal === '÷'){
                 btnVal = '/';
                 oper = '/';
@@ -203,6 +213,7 @@ buttons.forEach(function(button) {
                 console.log('1');
                 lastInput = memoryStorage.toString();
                 currentInput += memoryStorage.toString();
+                input.value = memoryStorage+'.';
                 mistakeCheck =0;
             }
             else{
@@ -213,6 +224,9 @@ buttons.forEach(function(button) {
             saveResult = memoryStorage.toString();
             shownInput = memoryStorage.toString();
             }
+            if (input.value.endsWith('.') && pointActive === true && shownInput.toString().includes('.')) {
+                input.value = input.value.slice(0, -1);
+            }
         }
         else if (btnVal === 'СП'){
             mistakeCheck = 0;
@@ -220,40 +234,53 @@ buttons.forEach(function(button) {
             //shownInput = '';
             console.log(memoryStorage);
         }
-        else if (btnVal === '/-/'){
-            console.log(pointActive);
+        // if( saveResult.toString().includes('.') && pointActive === false){
+        //     pointActive = true;
+        // }
+        else if (btnVal === '/-/') {
+            mistakeCheck = 0;
             if( saveResult.toString().includes('.') && pointActive === false){
                 pointActive = true;
             }
-            if (input.value.endsWith('.') && pointActive === true) {
-                input.value = input.value.slice(0, -1);
+            // Определяем, какое число нужно инвертировать
+            if (!isOperatorClicked && firstInput !== '') {
+                firstInput = (-parseFloat(firstInput)).toString();
+                shownInput = firstInput;
+            } else if (isOperatorClicked && lastInput !== '') {
+                lastInput = (-parseFloat(lastInput)).toString();
+                shownInput = lastInput;
+            }else if(resultDisplayed){
+                saveResult = (-parseFloat(saveResult)).toString();
+                shownInput = saveResult;
+            } 
+            else {
+                // Если числа нет, ничего не делаем
+                return;
             }
-            mistakeCheck = 0;
-            let reverseNumber;
-    
-            if (resultDisplayed) {
-                reverseNumber = -parseFloat(saveResult);
-                saveResult = reverseNumber.toString(); 
+        
+            // Обновляем отображение и текущее выражение
+            input.value = shownInput+'.';
+            if (!isOperatorClicked) {
+                currentInput = firstInput;
             } else {
-                reverseNumber = -parseFloat(currentInput);
+                currentInput = firstInput + oper + lastInput;
             }
-
-            // Обновляем значения для отображения
-            input.value = reverseNumber + '.';
-            currentInput = reverseNumber.toString();
-            shownInput = currentInput;
-            
-            if (input.value.endsWith('.') && pointActive === true) {
+        
+            if (input.value.endsWith('.') && pointActive === true && shownInput.toString().includes('.')) {
                 input.value = input.value.slice(0, -1);
             }
         }
+        
         // Операции
         else if (operators.includes(btnVal)){
-            
+            if(resultDisplayed){
+                pointActive = false;
+                resultDisplayed = false;
+            }
             if(btnVal != '%'){
                 oper = btnVal;
             }  
-            if(isOperatorClicked === true ){
+            if(isOperatorClicked === true && btnVal!='%'){
                 return;
             }
             timesClicked += 1;
@@ -261,7 +288,10 @@ buttons.forEach(function(button) {
             isOperatorClicked = true;
             currentInput += ' ' + ' ' + btnVal;
             input.value = shownInput+'.';
-            if (input.value.endsWith('.') && pointActive === true) {
+            if(firstInput=== ''){
+                input.value = '0.';
+            }
+            if ((input.value.endsWith('.') || pointActive === true) && shownInput.toString().includes('.')) {
                 input.value = input.value.slice(0, -1);
             }
             pointActive = false;
@@ -273,7 +303,15 @@ buttons.forEach(function(button) {
         }
         else if(btnVal === '.')
         {
+            if (resultDisplayed) {
+                resultDisplayed = false;
+                input.value = shownInput+'.';
+                return;
+            }
             if (!shownInput.includes('.')) {  // Проверка на наличие точки
+                if(shownInput === ''){
+                    shownInput='0';
+                }
                 pointActive = true;
                 shownInput += btnVal;
                 currentInput += btnVal;
@@ -289,9 +327,19 @@ buttons.forEach(function(button) {
         //Добавляем введенное значение
         else {
             mistakeCheck = 0;
+
+            // Если результат уже был отображён, сбрасываем shownInput
+            if (resultDisplayed) {
+                shownInput = '';
+                resultDisplayed = false; // Сбрасываем флаг
+            }
+
             if(!isOperatorClicked){
                 if(canAddToInput(btnVal)){
                     if(!operators.some(op1 => currentInput.includes(op1))){
+                        if(shownInput === '' && btnVal === '0'){
+                            return;
+                        }
                         firstInput += btnVal;
                     } 
                     shownInput += btnVal;
@@ -302,6 +350,9 @@ buttons.forEach(function(button) {
             else{
               if (canAddToInput(btnVal)) {
                 if (operators.some((op) => currentInput.includes(op))) {
+                    if (lastInput ==='0'){
+                        return
+                    }
                   lastInput += btnVal;
                 }
                 shownInput += btnVal;

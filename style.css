@@ -22,10 +22,10 @@ body, html {
 #display {
     font-family: "Electronica";
     margin-top: 250px;
-    margin-left: 70px;
+    margin-left: 80px;
     text-shadow: 2px 1px 1px blue;
     grid-area: display;
-    width: 510px;
+    width: 520px;
     height: 50px;
     background-color: rgb(26, 24, 24);
     color: aqua;
@@ -40,7 +40,7 @@ body, html {
 #buttons1 {
     grid-area: sp_buttons;
     grid-template-columns: repeat(1, 1fr);
-    margin-left: 50px; /* Поднимаем блок с кнопками слева */
+    margin-left: 70px; /* Поднимаем блок с кнопками слева */
     height: 50px;
     margin-top: 50px;
 }
@@ -102,6 +102,7 @@ body, html {
 #buttons3 .buttons:nth-child(6) {
     grid-row: span 2; /* Занимает две строки */
     height: 101.5px; /* Увеличиваем высоту */
+    margin-right: 15px;
 }
 form {
     position: absolute;
