@@ -93,8 +93,10 @@ function calculate(){
             result = parseFloat(result.toFixed(maxDecimalPlaces)); // Округляем до вычисленного количества знаков
         }
         input.value = result+'.';
-        if (input.value.endsWith('.') && !Number.isInteger(result) ) {    //!Number.isInteger(result)
+        console.log(result);
+        if (input.value.endsWith('.') && !Number.isInteger(result) && result.toString().includes('.')) {    //!Number.isInteger(result)
             input.value = input.value.slice(0, -1);
+            pointActive = true;
         }
         else{
             pointActive = false;
@@ -214,6 +216,9 @@ buttons.forEach(function(button) {
                 lastInput = memoryStorage.toString();
                 currentInput += memoryStorage.toString();
                 input.value = memoryStorage+'.';
+                if(saveResult.toString().includes('.')){
+                        input.value = input.value.slice(0, -1);
+                }
                 mistakeCheck =0;
             }
             else{
@@ -223,7 +228,11 @@ buttons.forEach(function(button) {
             currentInput = memoryStorage.toString();
             saveResult = memoryStorage.toString();
             shownInput = memoryStorage.toString();
+            if(memoryStorage === 0){
+                shownInput= '';
             }
+            }
+            console.log(shownInput);
             if (input.value.endsWith('.') && pointActive === true && shownInput.toString().includes('.')) {
                 input.value = input.value.slice(0, -1);
             }
@@ -276,6 +285,9 @@ buttons.forEach(function(button) {
             if(resultDisplayed){
                 pointActive = false;
                 resultDisplayed = false;
+                if(saveResult.toString().includes('.')){
+                    pointActive = true;
+                }
             }
             if(btnVal != '%'){
                 oper = btnVal;
@@ -287,10 +299,20 @@ buttons.forEach(function(button) {
             mistakeCheck = 0;
             isOperatorClicked = true;
             currentInput += ' ' + ' ' + btnVal;
+            if(shownInput === ''){
+                shownInput = firstInput;
+                if(shownInput==='' && firstInput===''){
+                    shownInput = '0';
+                }
+            }
             input.value = shownInput+'.';
             if(firstInput=== ''){
-                input.value = '0.';
+                input.value = saveResult+'.';
             }
+            if(saveResult.toString().includes('.'))
+                {
+                    input.value = input.value.slice(0, -1);
+                }
             if ((input.value.endsWith('.') || pointActive === true) && shownInput.toString().includes('.')) {
                 input.value = input.value.slice(0, -1);
             }
@@ -304,8 +326,11 @@ buttons.forEach(function(button) {
         else if(btnVal === '.')
         {
             if (resultDisplayed) {
-                resultDisplayed = false;
-                input.value = shownInput+'.';
+                resultDisplayed = false; 
+                pointActive = true;   
+                shownInput = '0.';
+                currentInput = '0.';
+                input.value = shownInput;
                 return;
             }
             if (!shownInput.includes('.')) {  // Проверка на наличие точки
@@ -315,13 +340,16 @@ buttons.forEach(function(button) {
                 pointActive = true;
                 shownInput += btnVal;
                 currentInput += btnVal;
-                input.value = shownInput;
+                input.value = shownInput+'.';
                 if(!operators.some(op1 => currentInput.includes(op1))){
                     firstInput += btnVal;
                 } 
                 if (operators.some((op) => currentInput.includes(op))) {
                     lastInput += btnVal;
                   }
+            }
+            if ((input.value.endsWith('.') || pointActive === true) && shownInput.toString().includes('.')) {
+                input.value = input.value.slice(0, -1);
             }
         }
         //Добавляем введенное значение
@@ -360,7 +388,8 @@ buttons.forEach(function(button) {
                 input.value = shownInput+'.';
               }
             }
-            if (input.value.endsWith('.') && pointActive === true) {
+            console.log(shownInput);
+            if (input.value.endsWith('.') && pointActive === true ) {
                 input.value = input.value.slice(0, -1);
             }
         }
