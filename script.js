@@ -24,6 +24,15 @@ input.value = '0.';
 
 function calculate(){
     try{
+        if(lastInput.toString().includes('-') && oper==='-'){
+            let t = 0;
+            t= parseFloat(lastInput)*(-1);
+            oper = '+';
+            lastInput= t.toString();
+            currentInput = firstInput+oper+lastInput;
+            console.log(lastInput);
+           }
+        console.log(currentInput);
         if(lastInput === '' && isOperatorClicked === true){
             if(lastInput === '' && firstInput!=''){
                 currentInput+= firstInput;
@@ -262,6 +271,7 @@ buttons.forEach(function(button) {
                 saveResult = (-parseFloat(saveResult)).toString();
                 shownInput = saveResult;
             } 
+            
             else {
                 // Если числа нет, ничего не делаем
                 return;
@@ -295,6 +305,7 @@ buttons.forEach(function(button) {
             if(isOperatorClicked === true && btnVal!='%'){
                 return;
             }
+            oper= btnVal;
             timesClicked += 1;
             mistakeCheck = 0;
             isOperatorClicked = true;
@@ -306,14 +317,19 @@ buttons.forEach(function(button) {
                 }
             }
             input.value = shownInput+'.';
-            if(firstInput=== ''){
+            console.log(input.value);
+            if(firstInput=== '' && input.value==='0.'){
+                console.log('o');
                 input.value = saveResult+'.';
+                console.log(input.value);
             }
-            if(saveResult.toString().includes('.'))
+            if(saveResult.toString().includes('.') && pointActive === true )
                 {
+                    console.log('i')
                     input.value = input.value.slice(0, -1);
                 }
-            if ((input.value.endsWith('.') || pointActive === true) && shownInput.toString().includes('.')) {
+            if ((input.value.endsWith('.') && pointActive === true) && shownInput.toString().includes('.')) {
+                console.log('p');
                 input.value = input.value.slice(0, -1);
             }
             pointActive = false;
@@ -360,6 +376,7 @@ buttons.forEach(function(button) {
             if (resultDisplayed) {
                 shownInput = '';
                 resultDisplayed = false; // Сбрасываем флаг
+                
             }
 
             if(!isOperatorClicked){
@@ -389,7 +406,7 @@ buttons.forEach(function(button) {
               }
             }
             console.log(shownInput);
-            if (input.value.endsWith('.') && pointActive === true ) {
+            if (input.value.endsWith('.') && pointActive === true && shownInput.toString().includes('.')) {
                 input.value = input.value.slice(0, -1);
             }
         }
