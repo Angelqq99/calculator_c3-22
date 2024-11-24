@@ -20,17 +20,18 @@ var overFlow = false;
 var saveData = '';
 var saveResult = '';
 var resultDisplayed = false;
+var saveOper = '';
 var a =0;
 input.value = '0.';
 
 function calculate(){
     try{
-        if(lastInput.toString().includes('-') && oper==='-'){
+        if(lastInput.toString().includes('-') && saveOper==='-'){
             let t = 0;
             t= parseFloat(lastInput)*(-1);
             oper = '+';
             lastInput= t.toString();
-            currentInput = firstInput+oper+lastInput;
+            currentInput = firstInput+saveOper+lastInput;
             console.log(lastInput);
            }
         console.log(currentInput);
@@ -306,7 +307,7 @@ buttons.forEach(function(button) {
             if(isOperatorClicked === true && btnVal!='%'){
                 return;
             }
-            oper= btnVal;
+            saveOper= btnVal;
             timesClicked += 1;
             mistakeCheck = 0;
             isOperatorClicked = true;
