@@ -31,18 +31,22 @@
             input[type="submit"]:hover {
                 background-color: #45a049; /* Цвет фона при наведении */
             }
-            body{
-               zoom: 1.9; 
+            iframe{
+                width: 80%;
+                height: 100%;
+                border: none;
+                position: absolute;
             }
         </style>
     </head>
     <body>
-        <img src="./instructions/1.png" width="600" height="500" alt="Description of the image">
-        <img src="./instructions/2.png" width="600" height="500" alt="Description of the image">
-        <img src="./instructions/3.png" width="600" height="500" alt="Description of the image">
-        <img src="./instructions/4.png" width="600" height="500" alt="Description of the image">
-        <img src="./instructions/5.png" width="600" height="500" alt="Description of the image">
-        <img src="./instructions/6.png" width="600" height="500" alt="Description of the image">
+        <iframe src="./instructions/instructions.pdf" allow="fullscreen"></iframe>
+        <!--<img src="./instructions/1.png"  alt="Description of the image">
+        <img src="./instructions/2.png" width="1000" height="800" alt="Description of the image">
+        <img src="./instructions/3.png" width="1000" height="800" alt="Description of the image">
+        <img src="./instructions/4.png" width="1000" height="800" alt="Description of the image">
+        <img src="./instructions/5.png" width="1000" height="800" alt="Description of the image">
+        <img src="./instructions/6.png" width="1000" height="800" alt="Description of the image">-->
         
         <form action='./index.html' method='get'>
             <input type='submit' value='Калькулятор'/>

@@ -23,9 +23,19 @@ var resultDisplayed = false;
 var saveOper = '';
 var a =0;
 input.value = '0.';
-
+function round(result){
+    if (!Number.isInteger(result)) {
+        let resultString = result.toString();
+        let integerPartLength = resultString.split('.')[0].length; // Длина целой части
+        let maxDecimalPlaces = 12 - integerPartLength; // Максимум знаков после запятой, чтобы общее количество было 12
+        if (maxDecimalPlaces < 0) maxDecimalPlaces = 0; // Если целая часть уже превышает 12 знаков
+        result = parseFloat(result.toFixed(maxDecimalPlaces)); // Округляем до вычисленного количества знаков
+    }
+    console.log(memoryStorage);
+}
 function calculate(){
     try{
+        
         if(lastInput.toString().includes('-') && saveOper==='-'){
             let t = 0;
             t= parseFloat(lastInput)*(-1);
@@ -44,31 +54,42 @@ function calculate(){
                 currentInput += tempInput;
             }
         }
+        console.log(currentInput+'!!!!');
         if(firstInput === ''){
             if(lastInput === '')
             {
                 if(saveResult != '' && tempInput != ''){
-                    currentInput = saveResult + oper +tempInput;
+                        currentInput = saveResult + oper +tempInput;
+                    
                 }else{
                     return;
                 }
             }
             else{
                 if(saveResult!=''){
-                currentInput = saveResult + oper +lastInput;
+                    if(currentInput.includes('%')){
+                        currentInput = saveResult + '%' +lastInput;
+                    }else{
+                        currentInput = saveResult + oper +lastInput;
+                    }
+                    
                 }else{
                     currentInput = '0' + oper +lastInput;
                     console.log(currentInput);
                 }
             }
         }
+        console.log(currentInput+'!!!!');
         if(lastInput !='' && oper !='' && timesClicked >=2)
         {
             currentInput+= lastInput;
         }         // Обработка процента
          if (currentInput.includes('%')) {
+            if(firstInput=== ''){
+                firstInput = saveResult;
+            }
             var t = parseFloat(firstInput) /100 *parseFloat(lastInput);
-            console.log(t);
+            console.log('sffgsd');
             if(oper!= ''){
                 currentInput = firstInput + ' '+oper+' '+t;
             }
@@ -128,6 +149,7 @@ function calculate(){
         saveResult = result.toString(); 
         firstInput = '';
         lastInput = '';
+        oper= '';
         shownInput = '0';
         currentInput = '';
         timesClicked = 0;
@@ -218,16 +240,22 @@ buttons.forEach(function(button) {
                     memoryStorage += parseFloat(saveResult);
                 }
             }
+            currentInput='';
+            shownInput = '';
+            firstInput = '';
+            lastInput = '';
+
             console.log(memoryStorage);
            // reset();
         }
         else if (btnVal === 'ИП'){
+            round(memoryStorage);
             if(isOperatorClicked){
                 console.log('1');
                 lastInput = memoryStorage.toString();
                 currentInput += memoryStorage.toString();
                 input.value = memoryStorage+'.';
-                if(saveResult.toString().includes('.')){
+                if(lastInput.toString().includes('.')){
                         input.value = input.value.slice(0, -1);
                 }
                 mistakeCheck =0;
@@ -242,6 +270,7 @@ buttons.forEach(function(button) {
             if(memoryStorage === 0){
                 shownInput= '';
             }
+            
             }
             console.log(shownInput);
             if (input.value.endsWith('.') && pointActive === true && shownInput.toString().includes('.')) {
@@ -273,6 +302,10 @@ buttons.forEach(function(button) {
                 saveResult = (-parseFloat(saveResult)).toString();
                 shownInput = saveResult;
             } 
+            else if(firstInput===''&& lastInput===''&& shownInput!=''){
+                shownInput = (-parseFloat(shownInput)).toString();
+                firstInput = shownInput;
+            }
             
             else {
                 // Если числа нет, ничего не делаем
@@ -323,6 +356,9 @@ buttons.forEach(function(button) {
             if(firstInput=== '' && input.value==='0.'){
                 console.log('o');
                 input.value = saveResult+'.';
+                if(saveResult===''){
+                    input.value = '0.';
+                }
                 console.log(input.value);
             }
             if(saveResult.toString().includes('.') && pointActive === true )
@@ -351,6 +387,7 @@ buttons.forEach(function(button) {
                 input.value = shownInput;
                 return;
             }
+            if (shownInput.indexOf('.') != -1) {return}
             if (!shownInput.includes('.')) {  // Проверка на наличие точки
                 if(shownInput === ''){
                     shownInput='0';
@@ -366,7 +403,7 @@ buttons.forEach(function(button) {
                     lastInput += btnVal;
                   }
             }
-            if ((input.value.endsWith('.') || pointActive === true) && shownInput.toString().includes('.')) {
+            if ((input.value.endsWith('.') && pointActive === true) && shownInput.toString().includes('.')) {
                 input.value = input.value.slice(0, -1);
             }
         }
@@ -378,6 +415,7 @@ buttons.forEach(function(button) {
             if (resultDisplayed) {
                 shownInput = '';
                 resultDisplayed = false; // Сбрасываем флаг
+                pointActive= false;
                 
             }
 
@@ -390,7 +428,7 @@ buttons.forEach(function(button) {
                         firstInput += btnVal;
                     } 
                     shownInput += btnVal;
-                    currentInput += btnVal;
+                    currentInput = firstInput;
                     input.value = shownInput+'.';
                 }
             }

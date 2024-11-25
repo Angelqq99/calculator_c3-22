@@ -22,11 +22,11 @@ body, html {
 #display {
     font-family: "Electronica";
     margin-top: 250px;
-    margin-left: 80px;
+    margin-left: 75px;
     text-shadow: 2px 1px 1px blue;
     grid-area: display;
-    width: 545px;
-    height: 50px;
+    width: 560px;
+    height: 55px;
     background-color: rgb(26, 24, 24);
     color: aqua;
     text-align: right;
@@ -124,3 +124,4 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #45a049; /* Цвет фона при наведении */
 }
+
