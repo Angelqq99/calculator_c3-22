@@ -41,7 +41,7 @@ function calculate(){
             t= parseFloat(lastInput)*(-1);
             oper = '+';
             lastInput= t.toString();
-            currentInput = firstInput+saveOper+lastInput;
+            currentInput = firstInput+oper+lastInput;
             console.log(lastInput);
            }
         console.log(currentInput);
@@ -104,7 +104,7 @@ function calculate(){
         
         var result = eval(currentInput);
         console.log(currentInput);
-        if(result > (10**16 - 1) || (result).length>=15 || currentInput === '0  /0' || currentInput ==='0/0') {
+        if(result > (10**16 - 1) || (result).length>=15 || currentInput === '0  /0' || currentInput ==='0/0' || result >= (10**16 - 1) || result.toString().includes('e')) {
             tempInput = '';
             reset();
             input.value = '............';
@@ -149,7 +149,7 @@ function calculate(){
         saveResult = result.toString(); 
         firstInput = '';
         lastInput = '';
-        oper= '';
+        //oper= '';
         shownInput = '0';
         currentInput = '';
         timesClicked = 0;
@@ -217,7 +217,7 @@ buttons.forEach(function(button) {
                     lastInput = '';
                     shownInput = '';
                     timesClicked = 0;
-                    input.value = '0.';
+                    input.value = firstInput+'.';
                     currentInput = currentInput.slice(0,-3);
                     }
                     
@@ -229,16 +229,20 @@ buttons.forEach(function(button) {
         }
         else if (btnVal === 'П+'){
             mistakeCheck = 0;
+            if(shownInput===''){
+                return;
+            }
             if(isOperatorClicked)
             {
                 memoryStorage += parseFloat(saveData);
             }
             else{
-                if(saveResult=== ''){
-                    memoryStorage += parseFloat(firstInput);
-                }else{
-                    memoryStorage += parseFloat(saveResult);
-                }
+                // if(saveResult=== ''){
+                //     memoryStorage += parseFloat(firstInput);
+                // }else{
+                //     memoryStorage += parseFloat(saveResult);
+                // }
+                memoryStorage += parseFloat(shownInput);
             }
             currentInput='';
             shownInput = '';

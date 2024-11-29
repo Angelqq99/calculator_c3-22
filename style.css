@@ -4,6 +4,7 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
+    
 }
 
 #calculator {
@@ -21,7 +22,7 @@ body, html {
 
 #display {
     font-family: "Electronica";
-    margin-top: 250px;
+    margin-top: 240px;
     margin-left: 75px;
     text-shadow: 2px 1px 1px blue;
     grid-area: display;
@@ -123,5 +124,31 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: #45a049; /* Цвет фона при наведении */
+}
+#description {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 10px; /* Отступ сверху */
+    left: 10px; /* Отступ слева */
+    width: 300px;
+    padding: 10px;
+    border: 2px solid #333;
+    background-color: #f4f4f4;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 25px;
+    z-index: 10; /* Поверх других элементов */
+}
+
+#description h3 {
+    margin-top: 0;
+    color: #222;
+}
+
+#description ul {
+    list-style: none;
+    padding: 0;
+}
+
+#description li {
+    margin: 5px 0;
 }
 
