@@ -22,6 +22,8 @@ var saveResult = '';
 var resultDisplayed = false;
 var saveOper = '';
 var a =0;
+var symbol =  '';
+var isP =false;
 input.value = '0.';
 function round(result){
     if (!Number.isInteger(result)) {
@@ -31,11 +33,11 @@ function round(result){
         if (maxDecimalPlaces < 0) maxDecimalPlaces = 0; // Если целая часть уже превышает 12 знаков
         result = parseFloat(result.toFixed(maxDecimalPlaces)); // Округляем до вычисленного количества знаков
     }
-    console.log(memoryStorage);
+    return result;
 }
 function calculate(){
     try{
-        
+        console.log(saveOper);
         if(lastInput.toString().includes('-') && saveOper==='-'){
             let t = 0;
             t= parseFloat(lastInput)*(-1);
@@ -89,12 +91,12 @@ function calculate(){
                 firstInput = saveResult;
             }
             var t = parseFloat(firstInput) /100 *parseFloat(lastInput);
-            console.log('sffgsd');
-            if(oper!= ''){
-                currentInput = firstInput + ' '+oper+' '+t;
-            }
-            else{
+            console.log(symbol);
+            if(symbol!='%'){
                 currentInput = t;
+            }
+            else if(oper!= '' ){
+                currentInput = firstInput + ' '+oper+' '+t;
             }
             console.log(currentInput);
             if (input.value.endsWith('.') && pointActive === true) {
@@ -103,20 +105,6 @@ function calculate(){
         }
         
         var result = eval(currentInput);
-        console.log(currentInput);
-        if(result > (10**16 - 1) || (result).length>=15 || currentInput === '0  /0' || currentInput ==='0/0' || result >= (10**16 - 1) || result.toString().includes('e')) {
-            tempInput = '';
-            reset();
-            input.value = '............';
-            shownInput = '0';
-            resultDisplayed = true;
-            return;  
-        }
-        if(overFlow === true && tempInput != '')
-        {
-            result = parseInt(result);
-            overFlow = false;
-        }
         if (!Number.isInteger(result)) {
             let resultString = result.toString();
             let integerPartLength = resultString.split('.')[0].length; // Длина целой части
@@ -124,6 +112,28 @@ function calculate(){
             if (maxDecimalPlaces < 0) maxDecimalPlaces = 0; // Если целая часть уже превышает 12 знаков
             result = parseFloat(result.toFixed(maxDecimalPlaces)); // Округляем до вычисленного количества знаков
         }
+        console.log(currentInput);
+        var tt = 0;
+        if (result < 0){
+            tt = tt+2;
+        }
+        if (result.toString().includes('.')){
+            tt = tt +3;
+        }
+        console.log(tt);
+        if(result > (10**17 - 1) || (result).length>=16 || currentInput === '0  /0' || currentInput ==='0/0' || result >= (10**17 - 1) || result.toString().includes('e') || (result).toString().length>=12 + tt) {
+            tempInput = '';
+            reset();
+            input.value = '. . . . . . . . . . . .    ';
+            shownInput = '0';
+            resultDisplayed = true;
+            return;  
+        }
+        // if(overFlow === true && tempInput != '')
+        // {
+        //     result = parseInt(result);
+        //     overFlow = false;
+        // }
         input.value = result+'.';
         console.log(result);
         if (input.value.endsWith('.') && !Number.isInteger(result) && result.toString().includes('.')) {    //!Number.isInteger(result)
@@ -135,12 +145,12 @@ function calculate(){
         }
         //|| (result.toString().replace('.', '').length >= 12 && result.toString().replace('.', '').length <= 15) || (currentInput).length>=15
         currentInput = result.toString();
-        if (result > (10**12 - 1) && result <= (10**16 - 1))  {
-            // result = parseInt(result);
-             input.value = result.toString().slice(0, 12);
-             overFlow = true;
-             console.log(result); 
-         }
+        // if (result > (10**12 - 1) && result <= (10**16 - 1))  {
+        //     // result = parseInt(result);
+        //      input.value = result.toString().slice(0, 13);
+        //      overFlow = true;
+        //      console.log(result); 
+        //  }
         shownInput = result.toString();
         if(lastInput != ''){
             tempInput = lastInput;
@@ -154,6 +164,7 @@ function calculate(){
         currentInput = '';
         timesClicked = 0;
         isOperatorClicked = false;
+        isP=false;
     } catch(e) {
         input.value = 'Error';
         currentInput = '';
@@ -164,7 +175,11 @@ function calculate(){
 // Функция для проверки длины
 function canAddToInput(value) {
     // Проверка, не превышает ли длина 12 символов
-    return (shownInput + value).length <= 12;
+    if(shownInput.includes('.')){
+        return (shownInput + value).length <= 13;
+    }else{
+        return (shownInput + value).length <= 12;
+    }
 }
 
 function reset(){
@@ -183,6 +198,7 @@ function reset(){
     overFlow = false;
     resultDisplayed = false;
     input.value = '0.';
+    isP=false;
 
 }
 
@@ -191,6 +207,9 @@ buttons.forEach(function(button) {
     button.addEventListener('click', function() {
         var btnVal = this.innerHTML;
         console.log(btnVal);
+        if(btnVal!= '='){
+            symbol  = btnVal;
+        }
         if(btnVal === '÷'){
                 btnVal = '/';
                 oper = '/';
@@ -201,6 +220,7 @@ buttons.forEach(function(button) {
         }
         // Очистка дисплея, добавить исправление ошибки ввода
         else if (btnVal === 'Cx'){
+            isP=false;
             if(isOperatorClicked === false){
                 mistakeCheck = 0;
                 reset();
@@ -232,6 +252,7 @@ buttons.forEach(function(button) {
             if(shownInput===''){
                 return;
             }
+            isP= true;
             if(isOperatorClicked)
             {
                 memoryStorage += parseFloat(saveData);
@@ -242,18 +263,22 @@ buttons.forEach(function(button) {
                 // }else{
                 //     memoryStorage += parseFloat(saveResult);
                 // }
-                memoryStorage += parseFloat(shownInput);
+                memoryStorage += parseFloat(input.value);
             }
-            currentInput='';
+            //currentInput='';
             shownInput = '';
-            firstInput = '';
-            lastInput = '';
+            //firstInput = '';
+           // lastInput = '';
 
             console.log(memoryStorage);
            // reset();
         }
         else if (btnVal === 'ИП'){
-            round(memoryStorage);
+            isP=false;
+            memoryStorage=round(memoryStorage);
+            if(memoryStorage.toString().includes('.')){
+                pointActive = true;
+            }
             if(isOperatorClicked){
                 console.log('1');
                 lastInput = memoryStorage.toString();
@@ -282,6 +307,7 @@ buttons.forEach(function(button) {
             }
         }
         else if (btnVal === 'СП'){
+            isP=false;
             mistakeCheck = 0;
             memoryStorage = 0;
             //shownInput = '';
@@ -291,6 +317,7 @@ buttons.forEach(function(button) {
         //     pointActive = true;
         // }
         else if (btnVal === '/-/') {
+            isP=false;
             mistakeCheck = 0;
             if( saveResult.toString().includes('.') && pointActive === false){
                 pointActive = true;
@@ -331,6 +358,7 @@ buttons.forEach(function(button) {
         
         // Операции
         else if (operators.includes(btnVal)){
+            isP=false;
             if(resultDisplayed){
                 pointActive = false;
                 resultDisplayed = false;
@@ -354,6 +382,10 @@ buttons.forEach(function(button) {
                 if(shownInput==='' && firstInput===''){
                     shownInput = '0';
                 }
+            }
+            if(overFlow === true && btnVal==='/'){
+                shownInput='';
+                return;
             }
             input.value = shownInput+'.';
             console.log(input.value);
@@ -383,27 +415,45 @@ buttons.forEach(function(button) {
         }
         else if(btnVal === '.')
         {
+            if(isP){
+                return;
+            }
+            console.log(canAddToInput(btnVal));
+            if(!canAddToInput(btnVal)){
+                return;
+            }
             if (resultDisplayed) {
+                
                 resultDisplayed = false; 
                 pointActive = true;   
                 shownInput = '0.';
                 currentInput = '0.';
+                firstInput = '0.';
                 input.value = shownInput;
+                console.log('123');
                 return;
             }
             if (shownInput.indexOf('.') != -1) {return}
-            if (!shownInput.includes('.')) {  // Проверка на наличие точки
+            if (!shownInput.includes('.') ) {  // Проверка на наличие точки
                 if(shownInput === ''){
                     shownInput='0';
                 }
+                console.log('321')
                 pointActive = true;
                 shownInput += btnVal;
+                console.log(shownInput)
                 currentInput += btnVal;
                 input.value = shownInput+'.';
                 if(!operators.some(op1 => currentInput.includes(op1))){
+                    if(firstInput===''){
+                        firstInput = '0';
+                    }
                     firstInput += btnVal;
                 } 
                 if (operators.some((op) => currentInput.includes(op))) {
+                    if(lastInput===''){
+                        lastInput = '0';
+                    }
                     lastInput += btnVal;
                   }
             }
@@ -413,6 +463,9 @@ buttons.forEach(function(button) {
         }
         //Добавляем введенное значение
         else {
+            if(isP){
+                return;
+            }
             mistakeCheck = 0;
 
             // Если результат уже был отображён, сбрасываем shownInput
@@ -427,6 +480,9 @@ buttons.forEach(function(button) {
                 if(canAddToInput(btnVal)){
                     if(!operators.some(op1 => currentInput.includes(op1))){
                         if(shownInput === '' && btnVal === '0'){
+                            input.value = '0.';
+                            firstInput='0';
+                            currentInput=firstInput;
                             return;
                         }
                         firstInput += btnVal;
@@ -439,8 +495,11 @@ buttons.forEach(function(button) {
             else{
               if (canAddToInput(btnVal)) {
                 if (operators.some((op) => currentInput.includes(op))) {
-                    if (lastInput ==='0'){
-                        return
+                    if(shownInput === '' && btnVal === '0'){
+                        lastInput='0';
+                        input.value = '0.';
+                        currentInput+=lastInput;
+                        return;
                     }
                   lastInput += btnVal;
                 }
