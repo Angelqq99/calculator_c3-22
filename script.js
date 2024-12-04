@@ -21,6 +21,7 @@ var saveData = '';
 var saveResult = '';
 var resultDisplayed = false;
 var saveOper = '';
+var isIP=false;
 var a =0;
 var symbol =  '';
 var isP =false;
@@ -105,6 +106,9 @@ function calculate(){
         }
         
         var result = eval(currentInput);
+        if(result.toString().includes('e')){
+            result = 0;
+        }
         if (!Number.isInteger(result)) {
             let resultString = result.toString();
             let integerPartLength = resultString.split('.')[0].length; // Длина целой части
@@ -121,7 +125,7 @@ function calculate(){
             tt = tt +3;
         }
         console.log(tt);
-        if(result > (10**17 - 1) || (result).length>=16 || currentInput === '0  /0' || currentInput ==='0/0' || result >= (10**17 - 1) || result.toString().includes('e') || (result).toString().length>=12 + tt) {
+        if(result > (10**17 - 1) || (result).length>=16 || currentInput === '0  /0' || currentInput ==='0/0' || result >= (10**17 - 1) ||  (result).toString().length>=12 + tt) {
             tempInput = '';
             reset();
             input.value = '. . . . . . . . . . . .    ';
@@ -199,6 +203,7 @@ function reset(){
     resultDisplayed = false;
     input.value = '0.';
     isP=false;
+    isIP=false;
 
 }
 
@@ -249,6 +254,9 @@ buttons.forEach(function(button) {
         }
         else if (btnVal === 'П+'){
             mistakeCheck = 0;
+            if(input.value){
+                shownInput=input.value;
+            }
             if(shownInput===''){
                 return;
             }
@@ -275,6 +283,7 @@ buttons.forEach(function(button) {
         }
         else if (btnVal === 'ИП'){
             isP=false;
+            isIP=true;
             memoryStorage=round(memoryStorage);
             if(memoryStorage.toString().includes('.')){
                 pointActive = true;
@@ -301,6 +310,22 @@ buttons.forEach(function(button) {
             }
             
             }
+            if(!isOperatorClicked){
+                isIP=true;
+                firstInput='';
+                currentInput='';
+                isOperatorClicked=false;
+                firstInput=memoryStorage.toString()
+                currentInput = firstInput;
+            }
+            else if(isOperatorClicked){
+                isIP=true;
+                lastInput='';
+                currentInput='';
+                isOperatorClicked=true;
+                lastInput=memoryStorage.toString();
+                currentInput=firstInput+oper+lastInput;
+            }
             console.log(shownInput);
             if (input.value.endsWith('.') && pointActive === true && shownInput.toString().includes('.')) {
                 input.value = input.value.slice(0, -1);
@@ -325,16 +350,28 @@ buttons.forEach(function(button) {
             // Определяем, какое число нужно инвертировать
             if (!isOperatorClicked && firstInput !== '') {
                 firstInput = (-parseFloat(firstInput)).toString();
+                if(firstInput.toString().includes('e')){
+                    firstInput='0';
+                }
                 shownInput = firstInput;
             } else if (isOperatorClicked && lastInput !== '') {
                 lastInput = (-parseFloat(lastInput)).toString();
+                if(lastInput.toString().includes('e')){
+                    lastInput='0';
+                }
                 shownInput = lastInput;
             }else if(resultDisplayed){
                 saveResult = (-parseFloat(saveResult)).toString();
+                if(saveResult.toString().includes('e')){
+                    saveResult='0';
+                }
                 shownInput = saveResult;
             } 
             else if(firstInput===''&& lastInput===''&& shownInput!=''){
                 shownInput = (-parseFloat(shownInput)).toString();
+                if(shownInput.toString().includes('e')){
+                    shownInput='0';
+                }
                 firstInput = shownInput;
             }
             
@@ -359,6 +396,7 @@ buttons.forEach(function(button) {
         // Операции
         else if (operators.includes(btnVal)){
             isP=false;
+
             if(resultDisplayed){
                 pointActive = false;
                 resultDisplayed = false;
@@ -463,9 +501,21 @@ buttons.forEach(function(button) {
         }
         //Добавляем введенное значение
         else {
-            if(isP){
-                return;
-            }
+            
+                if(isP|| isIP){
+                    if(!isOperatorClicked){
+                        firstInput='';
+                        currentInput='';
+                    }else{
+                        lastInput='';
+                        currentInput=firstInput+oper;
+                    }
+                    shownInput='';
+                    input.value='';
+                    isP=false;
+                    isIP=false;
+                    pointActive = false;
+                }
             mistakeCheck = 0;
 
             // Если результат уже был отображён, сбрасываем shownInput
